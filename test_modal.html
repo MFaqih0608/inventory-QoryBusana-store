@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Modal</title>
+    <style>
+        .logout-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-modal-backdrop.show { display: flex; }
+        .logout-modal {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 420px;
+            width: 90%;
+            overflow: hidden;
+        }
+        .logout-modal-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            padding: 32px 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .logout-modal-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+        }
+        .logout-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .logout-modal-body {
+            padding: 24px;
+            text-align: center;
+        }
+        .logout-modal-message {
+            font-size: 15px;
+            color: #4b5563;
+            line-height: 1.6;
+            margin: 0 0 20px;
+        }
+        .logout-modal-footer {
+            padding: 20px 24px;
+            display: flex;
+            gap: 12px;
+        }
+        .logout-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logout-btn-cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        .logout-btn-confirm {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="showConfirmModal('Test message', '#')">Test Modal</button>
+
+    <div class="logout-modal-backdrop" id="confirmModalBackdrop">
+        <div class="logout-modal">
+            <div class="logout-modal-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+                <div class="logout-modal-icon">
+                    <i class="bi bi-question-circle"></i>
+                </div>
+                <h2 class="logout-modal-title">Konfirmasi Tindakan</h2>
+            </div>
+            <div class="logout-modal-body">
+                <p id="confirmModalMessage" class="logout-modal-message">Apakah Anda yakin ingin melakukan tindakan ini?</p>
+            </div>
+            <div class="logout-modal-footer">
+                <button class="logout-btn logout-btn-cancel" onclick="hideConfirmModal()">
+                    Batal
+                </button>
+                <button class="logout-btn logout-btn-confirm" onclick="confirmAction()">
+                    Ya, Lanjutkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let confirmActionUrl = null;
+
+        function showConfirmModal(message, url) {
+            confirmActionUrl = url;
+            const backdrop = document.getElementById('confirmModalBackdrop');
+            const messageEl = document.getElementById('confirmModalMessage');
+            if (backdrop && messageEl) {
+                messageEl.textContent = message;
+                backdrop.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+            return false;
+        }
+
+        function handleConfirmLink(event, message, url) {
+            if (event) {
+                event.preventDefault();
+            }
+            return showConfirmModal(message, url);
+        }
+
+        function hideConfirmModal() {
+            const backdrop = document.getElementById('confirmModalBackdrop');
+            if (backdrop) {
+                backdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function confirmAction() {
+            if (confirmActionUrl) {
+                alert('Would redirect to: ' + confirmActionUrl);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmBackdrop = document.getElementById('confirmModalBackdrop');
+            if (confirmBackdrop) {
+                confirmBackdrop.addEventListener('click', function(e) {
+                    if (e.target === confirmBackdrop) {
+                        hideConfirmModal();
+                    }
+                });
+            }
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideConfirmModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
